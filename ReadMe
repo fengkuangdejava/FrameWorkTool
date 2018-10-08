@@ -1,0 +1,25 @@
+1、mysql建立数据库，运行resource/static/sql/ 目录下的sql文件
+2、修改application.properties及generatorConfig.xml文件里的数据库连接（ip,端口，库名）
+3、运行application
+
+mybatis反向生成-根据数据库的表 自动生成 实体类、增删查改sql语句及Mapper接口；
+
+新增文件generatorConfig.xml;具体配置看文件
+idea配置maven runConfig.运行目录为项目根目录，commond line为 mybatis-generator:generrate -e
+运行刚刚配置的maven run;
+
+
+架构特点：
+1,统一异常处理  具体查看ExceptionHandler类
+2,统一返回格式  具体查看result包
+3,统一返回信息管理 具体查看 ResultEnum枚举类
+4,集成druid连接池及监控页面 具体查看 config包
+5,前台http请求日志记录 具体查看RequestAspect
+6,自定义打包处理 查看pom文件build及assembly文件 所有静态文件和配置文件打在jar包外部，方便修改。
+7,mybatis自动生成功能-提高编码效率
+8,请求过滤处理器 用于防止静态资源文件缓存 查看 DemoApplication类及NoCacheFilter类
+9,简单轻量的定时任务处理 查看schedule包
+10,合理分层 - mapper层,service采用接口+实现类,controller层。提高代码利用率、逻辑及模块尽量解耦。
+11，带超时设定的Http第三方服务调用工具
+
+可能疑惑点：mapper包里都是接口，没有实现类，为何可以查到数据？可查询"Mybatis mapper 动态代理";
