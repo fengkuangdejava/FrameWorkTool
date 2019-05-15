@@ -23,7 +23,7 @@ public class DruidWebConfiguration {
      * @return
      */
     @Bean
-    public ServletRegistrationBean DruidStatViewServlet(){
+    public ServletRegistrationBean druidStatViewServlet(){
         //org.springframework.boot.context.embedded.ServletRegistrationBean提供类的进行注册.
         ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(new StatViewServlet(),"/druid/*");
 

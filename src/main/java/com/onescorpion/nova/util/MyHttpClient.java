@@ -24,10 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 请求工具
@@ -59,10 +56,11 @@ public class MyHttpClient {
         httpget.setConfig(requestConfig);
         int status = 0;
         //注入header
-            Set<String> keySet = header.keySet();
-            for (String key : keySet) {
-                httpget.setHeader(key, header.get(key));
-            }
+        Iterator<Map.Entry<String, String>>iterator = header.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry<String, String> entry = iterator.next();
+            httpget.setHeader(entry.getKey(), entry.getValue());
+        }
         //请求结果
         CloseableHttpResponse response = null;
         String content = "";
@@ -129,9 +127,10 @@ public class MyHttpClient {
 
         int status = 0;
         //注入header
-        Set<String> keySet = header.keySet();
-        for (String key : keySet) {
-            httpPost.setHeader(key, header.get(key));
+        Iterator<Map.Entry<String, String>>iterator = header.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry<String, String> entry = iterator.next();
+            httpPost.setHeader(entry.getKey(), entry.getValue());
         }
 
         //第三步：给httpPost设置JSON格式的参数
@@ -148,9 +147,13 @@ public class MyHttpClient {
             httpPost.setEntity(requestEntity);
             //执行post方法
             response = httpclient.execute(httpPost);
-            status = response.getStatusLine().getStatusCode();
+            HttpEntity entity=null;
+
+            if(response!=null) {
+                status = response.getStatusLine().getStatusCode();
+                entity = response.getEntity();
+            }
             try {
-                HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     content = EntityUtils.toString(entity, "utf-8");
                     if (status != 200) {
@@ -218,9 +221,7 @@ public class MyHttpClient {
                 HttpEntity entity = httpResponse.getEntity();
                 if (entity != null) {
                     content = EntityUtils.toString(entity, encode);
-                    if (entity != null) {
-                        EntityUtils.consume(entity);
-                    }
+                    EntityUtils.consume(entity);
                 } else {
                     content = "";
                 }
@@ -281,9 +282,10 @@ public class MyHttpClient {
                     .build();
             httppost.setEntity(reqEntity);
             //注入header
-            Set<String> keySet = header.keySet();
-            for (String key : keySet) {
-                httppost.setHeader(key, header.get(key));
+            Iterator<Map.Entry<String, String>>iterator = header.entrySet().iterator();
+            while (iterator.hasNext()){
+                Map.Entry<String, String> entry = iterator.next();
+                httppost.setHeader(entry.getKey(), entry.getValue());
             }
             httppost.setHeader("Content-Type", "multipart/form-data;charset=UTF-8;boundary=" + BOUNDARY);
 
